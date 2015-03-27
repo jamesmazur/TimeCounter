@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
 public class Driver {
@@ -65,35 +66,42 @@ public class Driver {
                 System.exit(1);
             }
         }
-        
-        // Now, create myFrame.
-        JFrame myFrame = new JFrame("Progress");
-        myFrame.setSize(520, 80);
-        myFrame.setLocationRelativeTo(null); // Center myFrame on screen.
-        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Set up the progress bar for myFrame.
-        JProgressBar timeProgressBar = new JProgressBar();
-        timeProgressBar.setMaximum(1000000);
-        timeProgressBar.setUI(new BasicProgressBarUI() { // Make the font color
-                                                         // black.
-                    protected Color getSelectionBackground() {
-                        return Color.black;
-                    }
+        // Create the GUI on the event dispatch thread.
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                // Now, create myFrame.
+                JFrame myFrame = new JFrame("Progress");
+                myFrame.setSize(520, 80);
+                myFrame.setLocationRelativeTo(null); // Center myFrame on screen.
+                myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                    protected Color getSelectionForeground() {
-                        return Color.black;
-                    }
-                });
-        timeProgressBar.setStringPainted(true); // Show text on the progress
-                                                // bar.
-        timeProgressBar.setFont(new Font("SansSerif", Font.BOLD, 24));
-        myFrame.add(timeProgressBar);
+                // Set up the progress bar for myFrame.
+                JProgressBar timeProgressBar = new JProgressBar();
+                timeProgressBar.setMaximum(1000000);
+                timeProgressBar.setUI(new BasicProgressBarUI() { // Make the font color
+                                                                 // black.
+                            protected Color getSelectionBackground() {
+                                return Color.black;
+                            }
 
-        // Set up the timer to update the progress bar, show the frame, and then
-        // start the timer.
-        ProgressTimerAndListener myProgressTimer = new ProgressTimerAndListener(timeProgressBar);
-        myFrame.setVisible(true);
-        myProgressTimer.start();
+                            protected Color getSelectionForeground() {
+                                return Color.black;
+                            }
+                        });
+                timeProgressBar.setStringPainted(true); // Show text on the progress
+                                                        // bar.
+                timeProgressBar.setFont(new Font("SansSerif", Font.BOLD, 24));
+                myFrame.add(timeProgressBar);
+
+                // Set up the timer to update the progress bar, show the frame, and then
+                // start the timer.
+                ProgressTimerAndListener myProgressTimer =
+                        new ProgressTimerAndListener(timeProgressBar);
+                myFrame.setVisible(true);
+                myProgressTimer.start();
+            }
+        });
     }
 }
